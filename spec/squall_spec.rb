@@ -14,3 +14,11 @@ RSpec.describe Squall do
     end
   end
 end
+
+  describe "process execution" do
+    it "supports process executor mode" do
+      input = [10, 20, 30]
+      results = Squall.map(input, in_processes: 2) { |n| n / 10 }
+      expect(results).to eq([1, 2, 3])
+    end
+  end
