@@ -25,3 +25,9 @@ results = Squall.map([1, 2, 3, 4], :in_threads => 2) do |x|
   x * 10
 end
 ```
+
+## Multi-Process Forking
+Squall can use multi-process forks to bypass the MRI Global VM Lock for CPU tasks:
+```ruby
+Squall.map(1..100, :in_processes => 4) { |n| n ** 2 }
+```
