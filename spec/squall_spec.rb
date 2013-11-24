@@ -22,3 +22,10 @@ end
       expect(results).to eq([1, 2, 3])
     end
   end
+
+  describe ".flat_map" do
+    it "flattens results by one level" do
+      results = Squall.flat_map([1, 2], in_threads: 2) { |n| [n, n * 10] }
+      expect(results).to eq([1, 10, 2, 20])
+    end
+  end
