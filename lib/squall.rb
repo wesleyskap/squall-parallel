@@ -54,3 +54,11 @@ module Squall
     end
   end
 end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
