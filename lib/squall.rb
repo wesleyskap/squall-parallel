@@ -62,3 +62,31 @@ end
   def self.configure
     yield(configuration)
   end
+
+  def self.any?(collection, options = {}, &block)
+    cancellation = Cancellation.new
+    opts = options.merge(cancellation: cancellation)
+    found = false
+
+    map(collection, opts) do |item|
+      if block.call(item)
+        found = true
+        cancellation.cancel!
+      end
+    end
+    found
+  end
+
+  def self.all?(collection, options = {}, &block)
+    cancellation = Cancellation.new
+    opts = options.merge(cancellation: cancellation)
+    all_match = true
+
+    map(collection, opts) do |item|
+      unless block.call(item)
+        all_match = false
+        cancellation.cancel!
+      end
+    end
+    all_match
+  end
