@@ -29,3 +29,17 @@ end
       expect(results).to eq([1, 10, 2, 20])
     end
   end
+
+  describe ".any? and .all?" do
+    it "stops early with any?" do
+      input = [1, 3, 5, 8, 9]
+      found = Squall.any?(input, in_threads: 2) { |n| n.even? }
+      expect(found).to be true
+    end
+
+    it "validates all items with all?" do
+      input = [2, 4, 6, 8]
+      expect(Squall.all?(input, in_threads: 2) { |n| n.even? }).to be true
+      expect(Squall.all?([2, 3, 4], in_threads: 2) { |n| n.even? }).to be false
+    end
+  end
