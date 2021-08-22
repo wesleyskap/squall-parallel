@@ -1,9 +1,19 @@
-﻿module Squall
+﻿# frozen_string_literal: true
+
+module Squall
   class RailsAdapter
+    def self.prepare_for_fork
+      return unless defined?(::ActiveRecord::Base)
+
+      ::ActiveRecord::Base.connection_handler.clear_all_connections!
+    rescue StandardError
+    end
+
     def self.establish_fork_connection
-      if defined?(::ActiveRecord::Base)
-        ::ActiveRecord::Base.establish_connection
-      end
+      return unless defined?(::ActiveRecord::Base)
+
+      ::ActiveRecord::Base.establish_connection
+    rescue StandardError
     end
 
     def self.with_connection(&block)
