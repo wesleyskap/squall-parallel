@@ -1,0 +1,14 @@
+﻿#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/squall"
+
+puts "Squall Parallel Runner v#{Squall::VERSION}"
+puts "Available workers (CPU cores): #{Squall.configuration.default_workers}"
+
+sample = (1..10).to_a
+results = Squall.map(sample, in_threads: 4) do |n|
+  n * 10
+end
+
+puts "Executed sample map: #{results.inspect}"
