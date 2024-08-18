@@ -1,4 +1,6 @@
-﻿module Squall
+﻿# frozen_string_literal: true
+
+module Squall
   class WorkUnit
     attr_reader :item, :index
 
@@ -9,6 +11,10 @@
 
     def process_with(block)
       block.call(item)
+    end
+
+    def process_with_index(block)
+      block.call(item, index)
     end
   end
 end
