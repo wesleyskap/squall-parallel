@@ -1,4 +1,6 @@
-﻿module Squall
+﻿# frozen_string_literal: true
+
+module Squall
   module Producers
     class ArrayProducer
       def initialize(collection)
