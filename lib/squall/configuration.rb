@@ -1,4 +1,6 @@
-﻿require "etc"
+﻿# frozen_string_literal: true
+
+require "etc"
 
 module Squall
   class Configuration
