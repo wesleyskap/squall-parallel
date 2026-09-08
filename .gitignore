@@ -1,5 +1,11 @@
-﻿*.gem
+*.gem
 *.rbc
 .bundle/
 vendor/bundle
 .vscode/
+.idea/
+.gemini/
+*.local
+*.tmp
+*.bak
+
