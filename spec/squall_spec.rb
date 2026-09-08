@@ -1,4 +1,4 @@
-﻿require "spec_helper"
+require "spec_helper"
 
 RSpec.describe Squall do
   describe ".map" do
@@ -13,7 +13,6 @@ RSpec.describe Squall do
       expect(results).to eq([2, 3, 4, 5, 6])
     end
   end
-end
 
   describe "process execution" do
     it "supports process executor mode" do
@@ -43,3 +42,4 @@ end
       expect(Squall.all?([2, 3, 4], in_threads: 2) { |n| n.even? }).to be false
     end
   end
+end
