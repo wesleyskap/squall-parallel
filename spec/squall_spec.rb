@@ -41,5 +41,27 @@ RSpec.describe Squall do
       expect(Squall.all?(input, in_threads: 2) { |n| n.even? }).to be true
       expect(Squall.all?([2, 3, 4], in_threads: 2) { |n| n.even? }).to be false
     end
+
+    it "cancels processing and does not evaluate subsequent elements" do
+      evaluated = []
+      mutex = Mutex.new
+      Squall.any?(1..100, in_threads: 1) do |n|
+        mutex.synchronize { evaluated << n }
+        n == 2
+      end
+      expect(evaluated.size).to be < 10
+    end
+  end
+
+  describe "error handling (fail-fast)" do
+    it "immediately raises exception and cancels workers on error" do
+      expect do
+        Squall.map(1..20, in_threads: 2) do |n|
+          raise "Worker failure on #{n}" if n == 5
+
+          n * 2
+        end
+      end.to raise_error(StandardError, /Worker failure on 5/)
+    end
   end
 end

@@ -1,4 +1,4 @@
-﻿# frozen_string_literal: true
+# frozen_string_literal: true
 
 require_relative "squall/version"
 require_relative "squall/errors"
@@ -26,27 +26,42 @@ module Squall
       yield(configuration)
     end
 
+    # Maps collection concurrently across workers.
+    # Example:
+    #   Squall.map([1, 2, 3], in_threads: 2) { |n| n * 2 }
     def map(collection, options = {}, &block)
       producer = wrap_producer(collection)
       executor = build_executor(options, producer.size)
       executor.execute(producer, &block)
     end
 
+    # Iterates collection concurrently and returns the original collection.
+    # Example:
+    #   Squall.each(urls, in_threads: 4) { |url| ping(url) }
     def each(collection, options = {}, &block)
       map(collection, options, &block)
       collection
     end
 
+    # Iterates collection concurrently providing item and original index.
+    # Example:
+    #   Squall.each_with_index(records, in_threads: 2) { |rec, idx| save(rec, idx) }
     def each_with_index(collection, options = {}, &block)
       producer = wrap_producer(collection)
       executor = build_executor(options, producer.size)
       executor.execute(producer) { |item| block.call(item, producer.to_a.index(item)) }
     end
 
+    # Maps collection concurrently and flattens result by one dimension.
+    # Example:
+    #   Squall.flat_map([1, 2], in_threads: 2) { |n| [n, n * 10] }
     def flat_map(collection, options = {}, &block)
       map(collection, options, &block).flatten(1)
     end
 
+    # Evaluates truthiness concurrently, cancelling on first truthy match.
+    # Example:
+    #   Squall.any?(users, in_threads: 4) { |u| u.admin? }
     def any?(collection, options = {}, &block)
       cancellation = Cancellation.new
       opts = options.merge(cancellation: cancellation)
@@ -61,6 +76,9 @@ module Squall
       found
     end
 
+    # Evaluates whether all items match condition, cancelling on first falsy.
+    # Example:
+    #   Squall.all?(numbers, in_threads: 4) { |n| n.positive? }
     def all?(collection, options = {}, &block)
       cancellation = Cancellation.new
       opts = options.merge(cancellation: cancellation)

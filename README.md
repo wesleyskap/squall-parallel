@@ -1,4 +1,4 @@
-﻿# Squall Parallel
+# Squall Parallel
 
 Squall (`squall-parallel`) is an elegant, production-ready parallel execution engine for Ruby, engineered with high cohesion, loose coupling, and strict modularity.
 
@@ -6,14 +6,14 @@ It makes it trivial to run identical blocks of code concurrently across availabl
 
 ## Key Features
 
-- **Small and Focused Design**: Highly modular architecture (classes under 100 lines, methods under 5 lines, explicit dependency injection).
 - **Multiple Execution Backends**:
-  - `in_threads`: Lightweight concurrency for I/O-bound tasks.
-  - `in_processes`: Multi-process parallelism using UNIX pipes for CPU-intensive tasks.
-  - `in_ractors`: Share-nothing actor parallelism for modern Ruby.
+  - `in_threads`: Lightweight concurrency for I/O-bound tasks with fail-fast exception propagation.
+  - `in_processes`: Multi-process parallelism using UNIX pipes with automatic fallback to threads on platforms without fork (e.g., Windows) and leak-free resource protection.
+  - `in_ractors`: Share-nothing actor parallelism for modern Ruby with automatic fallback on isolation errors.
 - **Universal Input Producers**: Works seamlessly with `Array`, `Range`, `Queue`, and `Enumerator::Lazy`.
 - **Expressive Enumerable Helpers**: `map`, `each`, `each_with_index`, `flat_map`, `any?`, `all?`.
-- **Early Termination & Cancellation**: Ability to break early when conditions match (`stop_early_when` or `any?`).
+- **Cooperative Early Termination**: Thread-safe cancellation token (`Squall::Cancellation`) with atomic event callbacks to abort remaining queued jobs immediately.
+- **Fail-Fast Error Handling**: Immediate worker cancellation and exception re-raising upon unhandled task errors.
 - **Progress Monitoring & ETA**: Built-in real-time percentage completion and rate estimation.
 - **Rails & ActiveRecord Connection Safety**: Automatically clears connections before forking and re-establishes connection pools safely.
 
